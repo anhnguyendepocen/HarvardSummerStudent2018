@@ -39,7 +39,7 @@ cor(____, ____   )
 
 # Whats the max fare?
 
-# Calculate the range of fares?
+# Calculate the range(), max() - min() of fares
 ___(___) #OR
 ___(___) - ___(___)
 
