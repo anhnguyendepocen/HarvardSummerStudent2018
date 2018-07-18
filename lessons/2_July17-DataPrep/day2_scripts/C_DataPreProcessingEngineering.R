@@ -4,7 +4,7 @@
 #' Notes: http://storm.cis.fordham.edu/~yli/documents/CISC4631Spring16/FinalProjects.pdf
 
 # Setwd
-setwd("C:/Users/Edward/Desktop/HarvardSummerAdmin2018/Lessons/2_July17-DataPrep")
+setwd("C:/Users/Edward/Desktop/HarvardSummerStudent2018/lessons/2_July17-DataPrep/day2_data")
 
 # Libs
 library(vtreat)
@@ -14,57 +14,6 @@ donors<- read.csv('fakeDonorBureau_v2.csv')
 
 # Examine; Here you would perform EDA
 summary(     )
-
-## Manual clean up 
-# Separate variables
-RowID <- donors$RowID
-uniqueID <- donors$uniqueID
-Y1_Donation <- donors$Y1_Donation
-Y2_DonatedAmt <- donors$Y2_DonatedAmt
-donors[,c('RowID','uniqueID', 'Y1_Donation','Y2_DonatedAmt')] <-NULL
-
-# Separate the factor columns
-factorCols <- sapply(donors, is.factor)
-factorVars <- donors[, factorCols]
-
-# Can you do the same for numeric columns in a new object called "numVars"?
-numCols <- sapply(donors, _______)
-numVars <-_________
-
-# Numeric variables NA Flag
-numFlags <- sapply(_____,is.na) * 1
-colnames(numFlags) <- paste0(colnames(numFlags),'_missingFlag')
-
-# Can you create a categorical missing flag matrix?
-factorFlags<- ______
-colames(factorFlags) <-_______
-
-# Let's drop the categorical NA; remember this is a design choice
-completeChk <- complete.cases(factorVars)
-factorVars<-factorVars[______, ]
-
-# For numeric, how about mean imputation
-(colAvgs <- sapply(numVars, _____, na.rm=T))
-
-# Manual Mean Imputation
-numVars$NUMCHLD[is.na(numVars$NUMCHLD)] <- colAvgs[1]
-numVars$INCOME[is.na(numVars$INCOME)] <- colAvgs[2]
-# Can you do the rest of the 14 numeric variables?
-
-# Since we dropped categorical rows we need to drop the SAME rows in the numeric variables
-# Join all the data back together
-processedDonors <- data.frame(RowID[completeChk],
-                              uniqueID[completeChk],
-                              Y1_Donation[completeChk],
-                              Y2_DonatedAmt[completeChk],
-                              factorVars,# don't need to remove the NA rows
-                              numVars[completeChk,],
-                              factorFlags[completeChk,], numFlags[completeChk,])
-# New Variables and no NAs
-summary(processedDonors)
-
-# Start over 
-rm(list=ls())
 
 ### Or an automated manner
 donors<- read.csv('fakeDonorBureau_v2.csv')
