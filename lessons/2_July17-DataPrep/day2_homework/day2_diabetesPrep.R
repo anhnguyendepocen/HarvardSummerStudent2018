@@ -41,7 +41,7 @@ mean(diabetes$num_lab_procedures)
 min(diabetes$num_medications)
 
 # What does the histogram of time_in_hospital look like? 
-DataExplorer::plot_histogram(diabetes$time_in_hospital)
+hist(diabetes$time_in_hospital)
 
 # Using library(DataExplorer) Create a plot to see % of missing records by variable
 DataExplorer::plot_missing(diabetes)
