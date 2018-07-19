@@ -10,7 +10,7 @@ library(e1071)
 library(plyr)
 
 ## Bring in some data
-dat<-read.csv('Absenteeism_at_work.csv', sep=';')
+dat<-read.csv('Absenteeism_at_work_v2.csv', sep=';')
 
 ## Explore to get familiar
 # Dimensions
