@@ -3,8 +3,7 @@
 #' Purpose: Load data build a KNN classifier
 
 ## Set the working directory
-setwd("~/HarvardSummerAdmin2018/Lessons/July19/Day4_Data")
-
+setwd("~/HarvardSummerStudent2018/lessons/4_July19-KNN_Trees_RF/Day4_Data")
 ## Load the libraries; 1st time use install.packages('ggplot2')
 library(caret)
 library(e1071)

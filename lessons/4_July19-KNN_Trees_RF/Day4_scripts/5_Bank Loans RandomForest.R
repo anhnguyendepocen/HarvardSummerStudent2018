@@ -5,8 +5,7 @@
 
 
 ## Set the working directory
-setwd("~/HarvardSummerAdmin2018/Lessons/July19/Day4_Data") 
-
+setwd("~/HarvardSummerStudent2018/lessons/4_July19-KNN_Trees_RF/Day4_Data")
 # Options
 options(scipen=999)# no scientific notation
 
