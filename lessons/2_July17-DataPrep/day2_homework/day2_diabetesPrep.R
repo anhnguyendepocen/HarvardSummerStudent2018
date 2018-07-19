@@ -50,6 +50,7 @@ DataExplorer::plot_missing(diabetes)
 diabetes$weight <- NULL
 
 # Remove the text
+diabetes$discharge_disposition_id <- NULL
 
 ## Now design a treatment plan to ready this data for modeling
 plan <- designTreatmentsC(diabetes, colnames(diabetes)[1:43],'readmitted', 'FALSE')

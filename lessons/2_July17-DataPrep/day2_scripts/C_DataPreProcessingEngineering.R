@@ -4,7 +4,7 @@
 #' Notes: http://storm.cis.fordham.edu/~yli/documents/CISC4631Spring16/FinalProjects.pdf
 
 # Setwd
-setwd("C:/Users/Edward/Desktop/HarvardSummerStudent2018/lessons/2_July17-DataPrep/day2_data")
+setwd("~/HarvardSummerStudent2018/lessons/2_July17-DataPrep/day2_data")
 
 # Libs
 library(vtreat)
@@ -13,7 +13,7 @@ library(vtreat)
 donors<- read.csv('fakeDonorBureau_v2.csv')
 
 # Examine; Here you would perform EDA
-summary(     )
+summary(donors)
 
 ### Or an automated manner
 donors<- read.csv('fakeDonorBureau_v2.csv')
@@ -23,13 +23,13 @@ donors<- read.csv('fakeDonorBureau_v2.csv')
 plan <- designTreatmentsC(donors, names(donors)[3:19],'Y1_Donation', 'Yes')
 
 # Apply the plan
-treatedData <- prepare(plan, donors)
+treatedData.C <- prepare(plan, donors)
 
 # Lots more appended vars; still need to drop redundant flags but much faster and robust!
-summary(treatedData)
+summary(treatedData.C)
 
 # Start over 
-rm(list=ls())
+# rm(list=ls())
 
 # Data
 donors<- read.csv('fakeDonorBureau_v2.csv')
@@ -39,13 +39,13 @@ donors<- read.csv('fakeDonorBureau_v2.csv')
 plan <- designTreatmentsN(donors, names(donors)[3:19],'Y2_DonatedAmt')
 
 # Apply the plan
-treatedData <- prepare(plan, donors)
+treatedData.N <- prepare(plan, donors)
 
 # Lots more appended vars; still need to drop redundant flags but much faster and robust!
-summary(treatedData)
+summary(treatedData.N)
 
 # Start over 
-rm(list=ls())
+# rm(list=ls())
 
 # Data
 donors<- read.csv('fakeDonorBureau_v2.csv')
