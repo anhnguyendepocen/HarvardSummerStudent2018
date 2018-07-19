@@ -6,6 +6,7 @@
 
 ## Set the working directory
 setwd("~/HarvardSummerStudent2018/lessons/4_July19-KNN_Trees_RF/Day4_Data")
+
 # Options
 options(scipen=999)# no scientific notation
 
@@ -16,13 +17,16 @@ library(randomForest)
 library(MLmetrics)
 
 ## Bring in some data
-dat <- read.csv('bank-full.csv', sep=';')
+dat <- read.csv('bank-full_v2.csv')
 
-# Create a True Holdout 10% for comparison later
 set.seed(1234)
-holdIDX <- sample(1:nrow(dat),(0.1 * nrow(dat)) %/% 1)
-holdoutDat <- dat[holdIDX,]
-dat <- dat[-holdIDX,]
+# To save time in class, we are only training on 20% of the data
+splitPercent <- round(nrow(dat) %*% .2)
+totalRecords <- 1:nrow(dat)
+idx <- sample(totalRecords, splitPercent)
+
+trainDat <- dat[idx,]
+testDat <- dat[-idx,]
 
 # Unbalanced class
 tallyY <- table(dat$y)

@@ -17,17 +17,24 @@ dat <- read.csv('bank.csv', sep=';')
 
 # Partitioning
 set.seed(1234)
-idx <- createDataPartition(y = dat$y, p= 0.8, list=F)
+splitPercent <- round(nrow(dat) %*% .9)
+totalRecords <- 1:nrow(dat)
+idx <- sample(totalRecords, splitPercent)
+
 trainDat <- dat[idx,]
 testDat <- dat[-idx,]
 
 # Force a full tree (override default parameters)
 overFit <- rpart(y ~ ., data = trainDat, method = "class", minsplit = 1, minbucket = 1, cp=-1)
+
+# Look at all the rules!!
 overFit
-prp(overFit, extra = 1)
+
+# Don't bother plotting, takes a while but a copy is saved in the data folder.
+#prp(overFit, extra = 1)
 
 # Look at training accuracy
-trainProbs <- predict(overFit) #original data saved as part of the modeling object
+trainProbs <- predict(overFit) 
 
 # Get the final class and actuals
 trainClass<-data.frame(class=colnames(trainProbs)[max.col(trainProbs)],actual = trainDat$y)
@@ -52,21 +59,39 @@ confMat
 # Accuracy
 sum(diag(confMat))/sum(confMat)
 
+# Start over
+rm(list=ls())
+
 ##########
-dat <- read.csv('bank-full.csv', sep=';') # now using full data set to approximate real scenario 
+dat <- read.csv('bank-full_v2.csv') # now a bit more data to approximate real scenario 
 
-
-# Partitioning
 set.seed(1234)
-idx <- createDataPartition(y = dat$y, p= 0.8, list=F)
+# To save time in class, we are only training on 20% of the data
+splitPercent <- round(nrow(dat) %*% .2)
+totalRecords <- 1:nrow(dat)
+idx <- sample(totalRecords, splitPercent)
+
 trainDat <- dat[idx,]
 testDat <- dat[-idx,]
 
 # Fit a decision tree with caret; should reweight 1st but not covered in class
 set.seed(1234)
-fit <- train(y ~., data = trainDat, method = "rpart", 
-             tuneGrid = data.frame(cp = c(0.01, 0.05)),
-             control = rpart.control(minsplit = 1, minbucket = 2))
+fit <- train(y ~., #formula based
+             data = trainDat, #data in
+             #instead of knn, caret does "recursive partitioning (trees)
+             method = "rpart", 
+             #Define a range for the CP to test
+             tuneGrid = data.frame(cp = c(0.01, 0.05)), 
+             #ie don't split if there are less than 1 record left and only do a split if there are at least 2+ records
+             control = rpart.control(minsplit = 1, minbucket = 2)) 
+
+# Or without the comments:
+#fit <- train(y ~., data = trainDat, 
+#             method = "rpart", 
+#             tuneGrid = data.frame(cp = c(0.01, 0.05)), 
+#             control = rpart.control(minsplit = 1, minbucket = 2)) 
+
+# I saved made on 90% of the data 
 # saveRDS(fit,'fullDataTreeFit.rds')
 # fit <- readRDS('fullDataTreeFit.rds')
 # Examine
@@ -81,3 +106,5 @@ confusionMatrix(trainCaret, trainDat$y)
 # Now more consistent accuracy!
 testCaret<-predict(fit,testDat)
 confusionMatrix(testCaret,testDat$y)
+
+# end

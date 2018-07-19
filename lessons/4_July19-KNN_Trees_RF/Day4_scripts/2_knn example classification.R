@@ -4,13 +4,14 @@
 
 ## Set the working directory
 setwd("~/HarvardSummerStudent2018/lessons/4_July19-KNN_Trees_RF/Day4_Data")
-## Load the libraries; 1st time use install.packages('ggplot2')
+
+## Load the libraries
 library(caret)
 library(e1071)
 library(plyr)
 
 ## Bring in some data
-dat<-read.csv('Absenteeism_at_work_v2.csv')
+dat<-read.csv('Absenteeism_at_work_v3.csv')
 
 ## Explore to get familiar
 # Dimensions
@@ -37,25 +38,20 @@ dat$ID <- NULL
 #  Tally reason codes
 table(dat$Reason.for.absence)
 
-# Group low supported factor levels
-threshold <- 40
-lowLevels <- names(which(table(dat$Reason.for.absence) < threshold))
-lowLvlChk <- dat$Reason.for.absence %in% lowLevels
-dat$Reason.for.absence[lowLvlChk] <- 'lowFreq'
-
 # Data partitioning
 set.seed(1234)
-idx<- sample(1:nrow(dat),(0.8 * nrow(dat)) %/% 1)
+splitPercent <- round(nrow(dat) %*% .9)
+totalRecords <- 1:nrow(dat)
+idx <- sample(totalRecords, splitPercent)
 
 trainDat <- dat[idx,]
 testDat <- dat[-idx,]
 
 # If you didn't scale prior to making a training set you can preProcess using the caret package
-knnFit <- train(Reason.for.absence ~ ., 
-                data = trainDat, 
-                method = "knn", 
-                preProcess = c("center","scale"), 
-                tuneLength = 20)
+knnFit <- train(Reason.for.absence ~ ., #similar formula to lm
+                data = trainDat, #data input
+                method = "knn", #caret has other methods so specify KNN
+                preProcess = c("center","scale")) #normalization
 
 # Evaluation
 knnFit
@@ -63,6 +59,10 @@ plot(knnFit)
 
 # training set accuracy
 trainClasses<-predict(knnFit,trainDat)
+resultsDF <- data.frame(actual = trainDat$Reason.for.absence, 
+                        classes = trainClasses)
+head(resultsDF)
+
 confusionMatrix(trainClasses,trainDat$Reason.for.absence) #predictions then reference (actual)
 
 # Testing set accuracy
@@ -72,5 +72,17 @@ confusionMatrix(testClasses,testDat$Reason.for.absence)
 # To see probabilities 
 trainProbs <- predict(knnFit, trainDat, type=c('prob'))
 head(trainProbs)
-names(trainProbs)[max.col(head(trainProbs))]
-head(trainClasses)
+
+# What is the column with the maximum value for each record?
+topProb <-max.col(head(trainProbs))
+
+# Get the name of the top valued probability
+names(trainProbs)[topProb]
+
+# Is this the same as predicting the classes directly?
+head(as.character(trainClasses))
+
+# Tie so max.col and predict function chose randomly; could have been different.
+trainProbs[4,]
+
+# End
