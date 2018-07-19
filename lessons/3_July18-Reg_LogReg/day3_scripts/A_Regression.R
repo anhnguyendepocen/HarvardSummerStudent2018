@@ -8,30 +8,30 @@ library(ggplot2)
 library(dplyr)
 
 # wd
-setwd("C:/Users/Edward/Desktop/HarvardSummerAdmin2018/Lessons/3_July18-Reg_LogReg")
+setwd("~/HarvardSummerStudent2018/lessons/3_July18-Reg_LogReg")
 
 # Data
 data('diamonds')
-set.seed(1234)
+set.seed(1)
 
 # This is a simple down-sample, not a partitioning schema.  
 # There is a difference because you would resample and get the same rows. 
 # When you partition you want to ensure no overlap of records.
-sampDiamonds <- sample_n(diamonds, 10000)
+# diamonds <- sample_n(diamonds, 10000)
 
 # EDA
-summary(sampDiamonds)
+summary(diamonds)
 
 # Remember this?
-p <- ggplot(sampDiamonds, aes(carat, price)) +geom_point(alpha=0.02)
+p <- ggplot(diamonds, aes(carat, price)) +geom_point(alpha=0.02)
 p
 
 # Since we see a relationship let's make a linear model to predict prices
-fit <- lm(price ~ carat + 0, sampDiamonds)
+fit <- lm(price ~ carat + 0, diamonds)
 fit
 
 # Add out model predictions
-p <- p + geom_abline(intercept =  0, slope = 5704, color='red')
+p <- p + geom_abline(intercept =  0, slope = 5666, color='red')
 p
 
 # End

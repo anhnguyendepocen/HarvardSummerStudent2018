@@ -7,12 +7,13 @@
 library(vtreat)
 library(dplyr)
 library(ModelMetrics)
+library(MLmetrics)
 
 # Options
 options(scipen=999)
 
 # SetWD
-setwd("C:/Users/Edward/Desktop/HarvardSummerAdmin2018/Lessons/3_July18-Reg_LogReg")
+setwd("~/HarvardSummerStudent2018/lessons/3_July18-Reg_LogReg/day3_data")
 
 # Dat
 cars <- read.csv('oldCar.csv')

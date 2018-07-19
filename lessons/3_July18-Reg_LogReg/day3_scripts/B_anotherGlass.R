@@ -6,15 +6,15 @@
 # Libs
 
 # Setwd
-setwd('C:/Users/Edward/Desktop/HarvardSummerAdmin2018/Lessons/3_July18-Reg_LogReg/')
+setwd('~/HarvardSummerStudent2018/Lessons/3_July18-Reg_LogReg/day3_data')
 
 # Data
 wine <- read.csv('Wine.csv')
 
-# Train 90%/Test 10% Partitioning
+  # Train 90%/Test 10% Partitioning
 splitPercent <- round(nrow(wine) %*% .9)
-(totalRecords <- 1:nrow(wine))
-(idx <- sample(totalRecords, splitPercent))
+totalRecords <- 1:nrow(wine)
+idx <- sample(totalRecords, splitPercent)
 
 # Remember its row, then columns with the indexing operation.  Here you use the vector of numbers in the "row" position to create a training set and the minus for test set.
 trainSet <- wine[idx, ]
@@ -33,27 +33,28 @@ rm(list=ls())
 wine <- read.csv('Wine.csv')
 
 # Train 50%/Validation 40% /Testing 10%
-trainPercent <-  round(nrow(wine) %*% .5)
-validationPercent <- round(nrow(wine) %*% .4)
+wine.training.n <-  round(nrow(wine) %*% .5)
+wine.validation.n <- round(nrow(wine) %*% .4)
 
 # Sample index for training
-trainIdx <- sample(1:nrow(wine), trainPercent)
+wine.training.indexes <- sample(1:nrow(wine), wine.training.n)
 
 # Identify the rows not in the training set, its the "difference" 
-remainingRows <-setdiff(1:nrow(wine), trainIdx)
+wine.remaining.indexes <-setdiff(1:nrow(wine), wine.training.indexes)
 
 # Create another sample but limit the row numbers to only those identified as *not* in training to get the validation index
-validationIdx <-sample(remainingRows, validationPercent)
+wine.validation.indexes <-sample(wine.remaining.indexes, wine.validation.n)
 
 # With the two idx vectors of randomly generated numbers, without any overlap you can put them in the "row" position for indexing. 
-trainSet <- wine[trainIdx, ]
-validationSet <- wine[validationIdx, ]
+wine.training <- wine[wine.training.indexes, ]
+wine.validation <- wine[wine.validation.indexes, ]
 
 # Here you combine both the index and put that with a minus.  Essentially removing any rows in training, or validation indexing leaving you with the test set.
-testSet <- wine[-c(trainIdx, validationIdx), ]
+wine.testing <- wine[-c(wine.training.indexes, wine.validation.indexes), ]
 
 # Chk
-nrow(trainSet) + nrow(validationSet) + nrow(testSet)
+nrow(wine.training) + nrow(wine.validation) + nrow(wine.testing)
 nrow(wine)
 
 # End
+
