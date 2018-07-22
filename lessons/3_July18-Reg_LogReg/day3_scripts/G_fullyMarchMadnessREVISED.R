@@ -7,9 +7,10 @@
 library(vtreat)
 library(MLmetrics)
 library(pROC)
+library(ggplot2)
 
 # wd
-setwd("C:/Users/Edward/Desktop/HarvardSummerAdmin2018/Lessons/3_July18-Reg_LogReg")
+setwd("~/HarvardSummerStudent2018/lessons/3_July18-Reg_LogReg/day3_data")
 
 # Data
 bball <- read.csv('ncaa.csv')
@@ -21,14 +22,14 @@ modelingVars <- bball[,!(names(bball) %in% names(bball)[drops])]
 
 # Design a "C"ategorical variable plan
 informativeVars <- names(modelingVars)[-45]
-target <- names(xVars)[45]
+target <- names(modelingVars)[45]
 
 plan <- designTreatmentsC(modelingVars, 
                           informativeVars,
                           target, 1)
 
-# Apply to xVars
-treatedX <- prepare(plan, xVars)
+# Apply to modelingVars
+treatedX <- prepare(plan, modelingVars)
 
 # Fit a model
 fit <- glm(R1.Class.1.win ~., data = treatedX, family ='binomial')
@@ -54,7 +55,7 @@ cutoff <- 0.5
 teamClasses <- ifelse(teamPreds >= cutoff, 1,0)
 
 # Organize w/Actual
-results <- data.frame(actual = xVars$R1.Class.1.win,
+results <- data.frame(actual = modelingVars$R1.Class.1.win,
                       classes = teamClasses)
 head(results)
 
