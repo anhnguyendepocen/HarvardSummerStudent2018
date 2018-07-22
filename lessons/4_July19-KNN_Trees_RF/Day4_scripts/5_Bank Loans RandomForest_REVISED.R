@@ -25,6 +25,9 @@ splitPercent <- round(nrow(dat) %*% .2)
 totalRecords <- 1:nrow(dat)
 idx <- sample(totalRecords, splitPercent)
 
+trainDat <- dat[idx,]
+testDat <- dat[-idx,]
+
 # Fit a random forest model with Caret
 downSampleFit <- train(Class ~ .,
                       data = trainDat,

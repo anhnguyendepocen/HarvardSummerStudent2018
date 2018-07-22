@@ -13,4 +13,7 @@ df <- data.frame(vec1 = c(1,2,3,4,5,6),
 df
 
 # Center and scale - subtract the mean of each vector and divide by the standard deviation
-scale(df, center=T)
+df.scaled <- scale(df, center=T)
+
+
+

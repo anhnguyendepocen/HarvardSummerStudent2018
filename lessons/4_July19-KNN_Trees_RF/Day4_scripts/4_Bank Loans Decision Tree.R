@@ -67,7 +67,7 @@ dat <- read.csv('bank-full_v2.csv') # now a bit more data to approximate real sc
 
 set.seed(1234)
 # To save time in class, we are only training on 20% of the data
-splitPercent <- round(nrow(dat) %*% .2)
+splitPercent <- round(nrow(dat) %*% .8)
 totalRecords <- 1:nrow(dat)
 idx <- sample(totalRecords, splitPercent)
 
