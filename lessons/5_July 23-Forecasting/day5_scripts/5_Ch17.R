@@ -2,7 +2,7 @@
 #' Data: 6-12-2018
 #' Purpose: These are code snippets from the book explaining regression based forecasting
 
-setwd("~/HarvardSummerStudent2018/lessons/5_July 23-Forecasting/day5_data")
+setwd("~/HarvardSummerStudent2018/book datasets")
 
 #### Figure 17.1
 
