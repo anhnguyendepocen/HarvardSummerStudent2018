@@ -44,5 +44,14 @@ plot(pred, col='blue')
 lines(pred, col='blue')
 lines(cvsRev$revMill, col='red')
 
+# Make a prediction
+newQtr <- data.frame(trend =(max(trendIdx)+1),
+                     Q1 = 0 ,
+                     Q2 = 1, 
+                     Q3 = 0,
+                     acquisitionFlag = 1)
+
+logPred <- predict(fit, newQtr)
+exp(logPred)
+
 # End
-                 
