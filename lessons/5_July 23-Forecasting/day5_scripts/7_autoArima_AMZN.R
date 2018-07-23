@@ -3,6 +3,9 @@
 #' Purpose: Quick Auto.Arima
 #' 
 
+# Wd
+setwd("~/HarvardSummerStudent2018/lessons/5_July 23-Forecasting/day5_data")
+
 # Options
 options(scipen=999)
 
