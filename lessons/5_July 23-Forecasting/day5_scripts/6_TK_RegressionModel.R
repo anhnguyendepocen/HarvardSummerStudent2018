@@ -1,6 +1,6 @@
 #' Author: Ted Kwartler
 #' Data: 6-6-2018
-#' Purpose: Exponential Smoothing (Holt Winters) on WalMart Revenue Data
+#' Purpose: Simple regression forecasting example
 
 # WD
 setwd("~/HarvardSummerStudent2018/lessons/5_July 23-Forecasting/day5_data")
