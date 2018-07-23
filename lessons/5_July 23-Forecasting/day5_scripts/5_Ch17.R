@@ -7,7 +7,7 @@ setwd("~/HarvardSummerStudent2018/book datasets")
 #### Figure 17.1
 
 library(forecast) 
-Amtrak.data <- read.csv("amtrak.csv")
+Amtrak.data <- read.csv("Amtrak.csv")
 
 # create time series
 ridership.ts <- ts(Amtrak.data$Ridership, start = c(1991,1),
@@ -78,6 +78,7 @@ lines(train.lm.linear.trend.pred$mean, lwd = 2, col = "black", lty = 3)
 lines(valid.ts)
 
 
+## OMIT FOR TIME ##
 # TK Example of log and exp
 logY <- log(train.ts) #Apply Natural Log
 #logTS <- ts(logY, start = c(1991,1),
