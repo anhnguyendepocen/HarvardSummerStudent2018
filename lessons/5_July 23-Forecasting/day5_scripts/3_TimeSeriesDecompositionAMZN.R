@@ -7,7 +7,7 @@
 options(scipen=999)
 
 # Wd
-setwd("~/HarvardSummerStudent2018/book datasets")
+setwd("~/HarvardSummerStudent2018/lessons/5_July 23-Forecasting/day5_data")
 
 # library
 library(forecast)
