@@ -54,4 +54,7 @@ newQtr <- data.frame(trend =(max(trendIdx)+1),
 logPred <- predict(fit, newQtr)
 exp(logPred)
 
+# plot it
+points(max(trendIdx)+1, exp(logPred), pch =15)
+
 # End
