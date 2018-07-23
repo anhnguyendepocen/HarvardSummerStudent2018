@@ -41,7 +41,5 @@ plot(pred, col='blue')
 lines(pred, col='blue')
 lines(cvsRev$revMill, col='red')
 
-# Although they have higher rev, the model demonstrates the revenue underperformance prior (blue spikes above red) or perhaps the acquisition let CVS smooth out their revenue
-
 # End
                  
