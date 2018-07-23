@@ -62,6 +62,8 @@ validForecasts <- predict(qtrHW, 12)
                             original = validationWMT$revMill,
                             fit = validForecasts))
 
+head(validationDF)
+
 # Examine visual fit
 ggplot(validationDF) +
   geom_line(aes(x=idx, y=original)) +

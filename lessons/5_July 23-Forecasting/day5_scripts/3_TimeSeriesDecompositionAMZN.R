@@ -7,7 +7,7 @@
 options(scipen=999)
 
 # Wd
-setwd("C:/Users/Edward/Desktop/HarvardSummerAdmin2018/Lessons/5_July 23-Forecasting/forecasting data")
+setwd("~/HarvardSummerStudent2018/book datasets")
 
 # library
 library(forecast)
