@@ -33,7 +33,6 @@ acquisition <- c(rep(0,76),rep(1,120-76))
 # Organize
 modelDF <- as.data.frame(cbind(y = log(cvsRev$revMill),
                                 trend =trendIdx,
-                                quadTrend = (trendIdx^2),
                                 quarts, 
                                 acquisitionFlag = acquisition))
 fit <-lm(y ~., modelDF)
