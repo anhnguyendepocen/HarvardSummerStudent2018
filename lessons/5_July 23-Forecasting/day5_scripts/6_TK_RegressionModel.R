@@ -31,8 +31,12 @@ trendIdx <- seq_along(cvsRev$revMill)
 acquisition <- c(rep(0,76),rep(1,120-76))
 
 # Organize
-modelMat <- as.data.frame(cbind(y = log(cvsRev$revMill),trendIdx, (trendIdx^2),quarts, acquisition))
-fit <-lm(y ~., modelMat)
+modelDF <- as.data.frame(cbind(y = log(cvsRev$revMill),
+                                trend =trendIdx,
+                                quadTrend = (trendIdx^2),
+                                quarts, 
+                                acquisitionFlag = acquisition))
+fit <-lm(y ~., modelDF)
 summary(fit)
 
 # Viz
