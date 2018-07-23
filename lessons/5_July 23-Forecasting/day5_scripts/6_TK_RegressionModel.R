@@ -2,6 +2,9 @@
 #' Data: 6-6-2018
 #' Purpose: Exponential Smoothing (Holt Winters) on WalMart Revenue Data
 
+# WD
+setwd("~/HarvardSummerStudent2018/lessons/5_July 23-Forecasting/day5_data")
+
 # Libraries
 library(forecast)
 
