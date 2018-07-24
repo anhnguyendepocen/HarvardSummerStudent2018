@@ -17,7 +17,7 @@ library(dygraphs)
 # Grocery     : SWY (Safeway),  KR (Kroger),              GAP (A & P)
 # Home Goods  : PIR (Pier 1),   WSM (Williams & Sonoma),  BBBY (Bed Bath & Beyond)
 # Home Improve: HD (Home Depot), LOW (Lowe's)
-stock <-'AMZN'
+stock <-'MSFT'
 
 # Open a browser with this URL; NOTE THE EXCHANGE "NAS" or "NYSE"
 (paste0('https://www.gurufocus.com/financials/', stock))
@@ -29,7 +29,7 @@ stock <-'AMZN'
 # Be sure to change the exchange if needed NYSE or NAS
 stockURL <- paste0('https://www.gurufocus.com/modules/chart/interactive_chart_json_morn.php?symbol=',
                    'NAS', #Change to the correct exchange in between quotes
-                   ':',stock,'&fp=q&ser=Revenue')
+                   ':',stock,'&fp=d&ser=Price')
 stockURL
 stockQtrRev <- fromJSON(stockURL)
 

@@ -11,6 +11,7 @@ setwd("~/HarvardSummerStudent2018/lessons/5_July 23-Forecasting/day5_data")
 
 # library
 library(forecast)
+library(seasonal)
 library(lubridate)
 library(ggseas)
 
