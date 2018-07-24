@@ -44,7 +44,7 @@ plot(amznR <- amznDecomp$random)
 plot(amznDecomp$random)
 
 # What is Amazon's lrevenue without the impact of the holiday shopping season?
-noSeasons <- (amznT + amznR) - amznS
+noSeasons <- qtrTS - amznS
 plot(noSeasons)
 
 # turn the ts back into a DF
