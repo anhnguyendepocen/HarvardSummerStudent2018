@@ -64,10 +64,10 @@ hist(predict(fit.rpart, df.validation) - df.validation$Price)
 ## Train Decision Tree model on Binned_Price
 
 fit.rpart.binned <- train(Binned_Price ~ Age_08_04 + KM + Fuel_Type + HP + Automatic + Doors + Quarterly_Tax + Mfr_Guarantee + Guarantee_Period + Airco + Automatic_airco + CD_Player + Powered_Windows + Sport_Model + Tow_Bar,
-                   data = df.training,
-                   method = 'rpart',
-                   tuneGrid = data.frame(cp = seq(0.0001, 0.01, 0.0001)),
-                   control = rpart.control(minsplit = 1, minbucket = 1))
+                          data = df.training,
+                          method = 'rpart',
+                          tuneGrid = data.frame(cp = seq(0.0001, 0.01, 0.0001)),
+                          control = rpart.control(minsplit = 1, minbucket = 1))
 
 fit.rpart.binned; prp(fit.rpart.binned$finalModel, extra = 1)
 
