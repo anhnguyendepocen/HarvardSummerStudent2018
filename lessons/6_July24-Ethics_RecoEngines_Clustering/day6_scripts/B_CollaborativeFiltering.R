@@ -8,6 +8,8 @@ library(dplyr)
 library(recommenderlab)
 library(reshape2)
 
+setwd('~/HarvardSummerStudent2018/lessons/6_July24-Ethics_RecoEngines_Clustering/day6_data')
+
 # Raw Data In & EDA
 songListens <- read_fst('10000Songs.fst')
 songData <- read_fst('song_data.fst')

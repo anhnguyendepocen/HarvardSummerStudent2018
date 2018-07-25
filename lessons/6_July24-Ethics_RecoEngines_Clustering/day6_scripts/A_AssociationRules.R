@@ -6,7 +6,7 @@
 library(arules)
 
 # WD
-setwd("C:/Users/Edward/Desktop/HarvardSummerAdmin2018/Lessons/6_July24-Ethics_RecoEngines_Clustering/day6_data")
+setwd("~/HarvardSummerStudent2018/lessons/6_July24-Ethics_RecoEngines_Clustering/day6_data")
 
 # Data
 faceDF <- read.csv("Faceplate.csv")
