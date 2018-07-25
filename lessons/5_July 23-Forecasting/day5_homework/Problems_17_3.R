@@ -4,6 +4,7 @@ library(forecast)
 setwd('~/HarvardSummerStudent2018/book datasets')
 
 df <- read.csv('ToysRUsRevenues.csv')
+df$Q1 <- as.numeric(df$Quarter == 'Q1')
 df$Q2 <- as.numeric(df$Quarter == 'Q2')
 df$Q3 <- as.numeric(df$Quarter == 'Q3')
 df$Q4 <- as.numeric(df$Quarter == 'Q4')
@@ -33,13 +34,13 @@ lines(df.training$Revenue.in.million..., col='red')
 
 ## Compute difference in sales between Q1 and Q3
 
-mean(head(df.training$predicted[df.training$Quarter == 'Q3'] - fit.tslm$coefficients['Index'] * df.training$Index[df.training$Quarter == 'Q3'], 3) - 
-     head(df.training$predicted[df.training$Quarter == 'Q1'] - fit.tslm$coefficients['Index'] * df.training$Index[df.training$Quarter == 'Q1'], 3))
+mean(head((df.training$predicted - fit.tslm$coefficients['trend'] * df.training$Index) * df.training$Q3 - 
+          (df.training$predicted - fit.tslm$coefficients['trend'] * df.training$Index) * df.training$Q1, 12))
 
 ## Compute best selling quarter after adjusting for seasonality
 
 summary(df.training$predicted[df.training$Quarter == 'Q1'])
-summary(df.training$predicted[df.training$Quarter == 'Q2'] - (fit.tslm$coefficients['Q2'] * df.training$Index[df.training$Quarter == 'Q2']))
-summary(df.training$predicted[df.training$Quarter == 'Q3'] - (fit.tslm$coefficients['Q3'] * df.training$Index[df.training$Quarter == 'Q3']))
-summary(df.training$predicted[df.training$Quarter == 'Q4'] - (fit.tslm$coefficients['Q4'] * df.training$Index[df.training$Quarter == 'Q4']))
+summary(df.training$predicted[df.training$Quarter == 'Q2'] - (fit.tslm$coefficients['season2'] * df.training$Index[df.training$Quarter == 'Q2']))
+summary(df.training$predicted[df.training$Quarter == 'Q3'] - (fit.tslm$coefficients['season3'] * df.training$Index[df.training$Quarter == 'Q3']))
+summary(df.training$predicted[df.training$Quarter == 'Q4'] - (fit.tslm$coefficients['season4'] * df.training$Index[df.training$Quarter == 'Q4']))
 
