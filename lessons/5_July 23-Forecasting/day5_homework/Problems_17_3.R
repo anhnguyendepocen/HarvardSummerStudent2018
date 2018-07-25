@@ -1,4 +1,6 @@
 
+library(forecast)
+
 setwd('~/HarvardSummerStudent2018/book datasets')
 
 df <- read.csv('ToysRUsRevenues.csv')
@@ -18,10 +20,10 @@ ts.validation <- ts(df.validation$Revenue.in.million..., start = c(1992, 1), fre
 
 ## Fit Regression model with linear trend and additive seasonality
 
-fit.lm <- lm(Revenue.in.million... ~ ., df.training[,!(names(df.training) %in% c('QuarterYear', 'Quarter'))]) 
-summary(fit.lm)
+fit.tslm <- tslm(ts.training ~ trend + season, ts.training) 
+summary(fit.tslm)
 
-df.training$predicted <- predict(fit.lm)
+df.training$predicted <- predict(fit.tslm)
 
 ## Plot resulting model
 
@@ -31,12 +33,13 @@ lines(df.training$Revenue.in.million..., col='red')
 
 ## Compute difference in sales between Q1 and Q3
 
-mean(head(df.training$predicted[df.training$Quarter == 'Q3'] - fit.lm$coefficients['Index'] * df.training$Index[df.training$Quarter == 'Q3'], 3) - 
-     head(df.training$predicted[df.training$Quarter == 'Q1'] - fit.lm$coefficients['Index'] * df.training$Index[df.training$Quarter == 'Q1'], 3))
+mean(head(df.training$predicted[df.training$Quarter == 'Q3'] - fit.tslm$coefficients['Index'] * df.training$Index[df.training$Quarter == 'Q3'], 3) - 
+     head(df.training$predicted[df.training$Quarter == 'Q1'] - fit.tslm$coefficients['Index'] * df.training$Index[df.training$Quarter == 'Q1'], 3))
 
 ## Compute best selling quarter after adjusting for seasonality
 
 summary(df.training$predicted[df.training$Quarter == 'Q1'])
-summary(df.training$predicted[df.training$Quarter == 'Q2'] - (fit.lm$coefficients['Q2'] * df.training$Index[df.training$Quarter == 'Q2']))
-summary(df.training$predicted[df.training$Quarter == 'Q3'] - (fit.lm$coefficients['Q3'] * df.training$Index[df.training$Quarter == 'Q3']))
-summary(df.training$predicted[df.training$Quarter == 'Q4'] - (fit.lm$coefficients['Q4'] * df.training$Index[df.training$Quarter == 'Q4']))
+summary(df.training$predicted[df.training$Quarter == 'Q2'] - (fit.tslm$coefficients['Q2'] * df.training$Index[df.training$Quarter == 'Q2']))
+summary(df.training$predicted[df.training$Quarter == 'Q3'] - (fit.tslm$coefficients['Q3'] * df.training$Index[df.training$Quarter == 'Q3']))
+summary(df.training$predicted[df.training$Quarter == 'Q4'] - (fit.tslm$coefficients['Q4'] * df.training$Index[df.training$Quarter == 'Q4']))
+
