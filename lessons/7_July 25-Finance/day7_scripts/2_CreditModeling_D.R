@@ -7,7 +7,7 @@
 options(scipen=999)
 
 # Data Directory
-setwd('C:/Users/Edward/Desktop/HarvardSummerAdmin2018/Lessons/7_July 25-Finance/day7_data/LC')
+setwd('~/HarvardSummerStudent2018/lessons/7_July 25-Finance/day7_data/LC')
 
 # Libraries
 library(rpart)

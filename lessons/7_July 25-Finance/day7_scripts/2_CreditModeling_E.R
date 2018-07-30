@@ -14,7 +14,7 @@ library(dplyr)
 library(rbokeh)
 
 # Data Directory
-setwd('C:/Users/Edward/Desktop/HarvardSummerAdmin2018/Lessons/7_July 25-Finance/day7_data/LC')
+setwd('~/HarvardSummerStudent2018/lessons/7_July 25-Finance/day7_data/LC')
 
 # Data
 originalNotes <-read.csv("20K_sampleLoans.csv")

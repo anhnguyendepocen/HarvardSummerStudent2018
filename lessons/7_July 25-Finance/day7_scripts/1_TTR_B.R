@@ -26,10 +26,10 @@ CMGma30 <- SMA(CMG$CMG.Close, 30)
 plot(CMG$CMG.Close)
 lines(CMGma3, col='red')
 
-plot(CMG$CMG.Close)
-lines(CMGma10, col='red')
+# plot(CMG$CMG.Close)
+lines(CMGma10, col='blue')
 
-plot(CMG$CMG.Close)
-lines(CMGma30, col='red')
+# plot(CMG$CMG.Close)
+lines(CMGma30, col='green')
 
 # End

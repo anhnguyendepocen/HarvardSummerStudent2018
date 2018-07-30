@@ -4,9 +4,8 @@
 #' 
 
 # Install the boosterbox package
-#install.packages('triangle')
-#install.packages("~/HarvardSummerAdmin2018/Lessons/7_July 25/BoosterBox_0.0.2.tar.gz", 
-#                 repos = NULL, type = "source")
+install.packages('triangle')
+install.packages("~/HarvardSummerStudent2018/Lessons/7_July 25/BoosterBox_0.0.2.tar.gz", repos = NULL, type = "source")
 
 # Library
 library(BoosterBox)

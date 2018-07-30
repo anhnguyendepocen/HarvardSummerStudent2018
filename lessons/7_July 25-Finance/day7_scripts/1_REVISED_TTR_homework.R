@@ -9,7 +9,7 @@
 # recommendation - a string you enter inside quotes stating based on the indicator whether it says to buy or sell the stock
 
 
-stockChk <- function(tickerSymbol='AAPL', lookBack =365, kpi = 'macd', recommendation = 'NOT ENTERED'){
+stockChk <- function(tickerSymbol='AAPL', lookBack =365, recommendation = 'NOT ENTERED'){
 
   # Libs
   require(TTR)
@@ -27,47 +27,43 @@ stockChk <- function(tickerSymbol='AAPL', lookBack =365, kpi = 'macd', recommend
   closeIdx <- grep('Close', names(x))
   
   # Calc indicators
-  if(kpi == 'macd'){
-    xKPI <- MACD(x[,closeIdx],
+  # if(kpi == 'macd'){
+    xMACD <- MACD(x[,closeIdx],
                   nFast = 12, nSlow = 26, nSig = 9, 
                   maType="SMA", percent = T)
-  }
-  if(kpi == 'rsi'){
-    xKPI <-RSI(x[,closeIdx], maType="SMA", n =14)
-  }
-  if(kpi =='sma'){
-    xKPI <-SMA(x[,closeIdx], 10)
-  }
+  # }
+  # if(kpi == 'rsi'){
+    xRSI <-RSI(x[,closeIdx], maType="SMA", n =14)
+  # }
+  # if(kpi =='sma'){
+    xSMA <-SMA(x[,closeIdx], 10)
+  # }
   
   # Visual Titles
   closingTitle <- paste('Daily Closing Price of ', tickerSymbol)
   candleTitle <- paste('Candlestick of ', tickerSymbol)
-  kpiTitle <- paste(kpi, 'for', tickerSymbol, 'says to ',recommendation)
   
   # Construct kpi visuals
-  if(kpi=='sma'){
-    smaData <- cbind(x[,closeIdx],xKPI) 
-    kpiPlot <- dygraph(smaData, 
+  # if(kpi=='sma'){
+    smaData <- cbind(x[,closeIdx],xSMA) 
+    smaPlot <- dygraph(smaData, 
                        group = "Price", height = 200, 
-                       width = "100%", main = kpiTitle) %>%
-      dyRangeSelector()
-  }
-  if(kpi=='rsi'){
-    kpiPlot <- dygraph(xKPI, 
+                       width = "100%", main = paste('SMA for', tickerSymbol))
+  # }
+  # if(kpi=='rsi'){
+    rsiPlot <- dygraph(xRSI, 
                        group = "Price", height = 200, 
-                       width = "100%", main = kpiTitle) %>%
+                       width = "100%", main = paste('RSI for', tickerSymbol)) %>%
       dyLimit(30, label = 'OverSold') %>%
-      dyLimit(70, label = 'OverBought') %>%
-      dyRangeSelector()
-  }
-  if(kpi=='macd'){
-    kpiPlot <- dygraph(xKPI,
+      dyLimit(70, label = 'OverBought')
+  # }
+  # if(kpi=='macd'){
+    macdPlot <- dygraph(xMACD,
             group = "Price", height = 200, 
-            width = "100%", main = kpiTitle) %>%
+            width = "100%", main = paste('MACD for', tickerSymbol)) %>%
       dySeries('macd',label='MACD') %>%
-      dySeries('signal',label='SIGNAL') %>%
-      dyRangeSelector()
-  }
+      dySeries('signal',label='SIGNAL')
+  # }
 
   dashboard <- browsable(
     tagList(
@@ -77,13 +73,19 @@ stockChk <- function(tickerSymbol='AAPL', lookBack =365, kpi = 'macd', recommend
       dygraph(x[,1:4],
               group = "Price",height = 200, 
               width = "100%", main = candleTitle) %>%
-        dyCandlestick(),kpiPlot))
+      dyCandlestick() %>%
+        dyRangeSelector(),
+      smaPlot,
+      rsiPlot,
+      macdPlot))
   
   return(dashboard)
 }
 
 # Examples
 stockChk()
+stockChk('^RUT')
+stockChk('^GSPC')
 stockChk('goog')
 stockChk('amzn', lookBack = 34)
 stockChk('CMG', kpi = 'rsi', lookBack = 365)
