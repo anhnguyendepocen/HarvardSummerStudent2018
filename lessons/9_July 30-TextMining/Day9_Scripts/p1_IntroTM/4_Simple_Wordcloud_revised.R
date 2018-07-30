@@ -7,7 +7,7 @@
 #' 
 
 # Set the working directory
-setwd("~/HarvardSummerAdmin2018/Lessons/July 30/Day9_Data")
+setwd("~/HarvardSummerStudent2018/lessons/9_July 30-TextMining/Day9_Data")
 
 # Libs
 library(tm)
