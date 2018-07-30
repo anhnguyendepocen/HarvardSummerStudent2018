@@ -1,0 +1,33 @@
+---
+title: "Untitled"
+output: 
+  flexdashboard::flex_dashboard:
+    vertical_layout: scroll
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+```
+
+
+### Chart A
+
+```{r}
+plot(1,1)
+```
+
+
+### Chart B
+
+```{r}
+print('this is some text')
+
+```
+
+### Chart C
+
+```{r}
+plot(2,3)
+print('and other nonsense')
+```
+

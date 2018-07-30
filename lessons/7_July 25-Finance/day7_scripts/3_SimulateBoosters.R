@@ -4,8 +4,13 @@
 #' 
 
 # Install the boosterbox package
+install.packages('RCurl')
+install.packages('XML')
 install.packages('triangle')
-install.packages("~/HarvardSummerStudent2018/Lessons/7_July 25/BoosterBox_0.0.2.tar.gz", repos = NULL, type = "source")
+setwd("~/HarvardSummerStudent2018/lessons/7_July 25-Finance")
+install.packages("BoosterBox_0.0.2.tar.gz",repos = NULL, type = "source")
+#
+#library(BoosterBox)
 
 # Library
 library(BoosterBox)

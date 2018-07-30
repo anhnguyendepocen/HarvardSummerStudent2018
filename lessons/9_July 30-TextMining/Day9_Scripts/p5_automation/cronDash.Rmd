@@ -1,0 +1,128 @@
+---
+title: "Daily TM Report"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tm)
+library(wordcloud2)
+library(rbokeh)
+library(radarchart)
+library(stringi)
+library(stringr)
+
+tryTolower <- function(x){
+  y = NA
+  try_error = tryCatch(tolower(x), error = function(e) e)
+  if (!inherits(try_error, 'error'))
+    y = tolower(x)
+  return(y)
+}
+
+clean.corpus<-function(corpus){
+  corpus <- tm_map(corpus, content_transformer(tryTolower))
+  corpus <- tm_map(corpus, removeWords, stopwords('SMART')) # FYI different than training
+  corpus <- tm_map(corpus, removePunctuation)
+  corpus <- tm_map(corpus, stripWhitespace)
+  corpus <- tm_map(corpus, removeNumbers)
+  return(corpus)
+}
+
+# Get text (only difference); make sure the path is correct
+# ~/HarvardSummerAdmin2018/Lessons/July 30/Day9_Data/news.csv
+txt<-read.csv('C:/Users/Edward/Desktop/HarvardSummerAdmin2018/Lessons/July 30/Day9_Data/news.csv', stringsAsFactors = F, encoding = 'UTF-8')
+
+# Corpus Preprocessing & Organization
+txtCorpus <- VCorpus(DataframeSource(txt))
+txtCorpus<-clean.corpus(txtCorpus)
+txtDTM<-DocumentTermMatrix(txtCorpus)
+
+# Make a simple matrix version
+txtM<-as.matrix(txtDTM)
+```
+
+Row 
+-----------------------------------------------------------------------
+
+### Report Date
+
+```{r date}
+valueBox(Sys.Date(), 
+         icon = "fa-calendar-check-o", #http://fontawesome.io/icon/calendar-check-o/
+         color = "#bada55")
+
+```
+
+Row
+-----------------------------------------------------------------------
+
+### WordCloud
+
+```{r wordcloud}
+dtmVec <- sort(colSums(txtM),decreasing=TRUE)
+wcDF <- data.frame(word = names(dtmVec),freq=dtmVec)
+wordcloud2(wcDF[1:200,], size = .5)
+```
+
+Column 
+-----------------------------------------------------------------------
+
+### Top Ten Word Associations
+
+```{r}
+dtmVec <- sort(colSums(txtM),decreasing=TRUE)
+wcDF <- data.frame(word = names(dtmVec),freq=dtmVec)
+topTerm<-as.character(wcDF[1,1])
+associations<-findAssocs(txtDTM, topTerm, 0.40)
+assocVec<-unlist(associations)
+names(assocVec)<-names(associations[[1]])
+barplot(assocVec, las=3) 
+```
+
+### Term Density by Source
+
+```{r radar}
+topTerms<-as.character(wcDF[1:8,1])
+topTerms<- paste(topTerms, collapse='|')
+txt$top_term_density<-stri_count_regex(txt$text, pattern=topTerms)
+topDensity<-aggregate(top_term_density ~ doc_id, txt, sum)
+topDensity<-topDensity[order(topDensity$top_term_density, decreasing=T),]
+colnames(topDensity)<-c('newsSource',topTerms)
+
+## Display some tabled data
+knitr::kable(topDensity[1:10,])
+```
+
+Row 
+-----------------------------------------------------------------------
+
+### Lexical Diversity
+
+```{r diverstiy}
+# count avg word length in article description
+txt$strCount<-str_count(txt$text, pattern = ' ')
+avgLength<-aggregate(strCount ~ doc_id, txt, mean)
+
+# Count unique words in article description 
+uniqueStr<-str_split(txt$text, pattern = " ")
+uniqueStr<-lapply(uniqueStr,unique)
+txt$strUnique<-unlist(lapply(uniqueStr,length))
+avgDiversity<-aggregate(strUnique ~ doc_id, txt, mean)
+
+# Count number of text records by source
+numArticles<-aggregate(text ~ doc_id, txt, length)
+
+# Merge accounts for missing
+scatterDF<-merge(avgLength,avgDiversity, all=T)
+scatterDF<-merge(scatterDF,numArticles, all=T)
+
+# Make scatter plot
+plot(scatterDF$strCount,scatterDF$strUnique,
+     xlab="Total Word Count", ylab="Word Diversity")
+text(scatterDF$strCount, scatterDF$strUnique, scatterDF$doc_id, cex=0.6, pos=4, col="red")
+ 
+```
