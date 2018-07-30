@@ -1,0 +1,121 @@
+---
+title: "Daily TM News Report"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tm)
+library(wordcloud2)
+library(rbokeh)
+library(radarchart)
+library(stringi)
+library(stringr)
+
+# Markdown updates causes bug with valueBoxes
+#require(devtools)
+#install_version("rmarkdown", version = "1.9", repos = "http://cran.us.r-project.org")
+
+tryTolower <- function(x){
+  y = NA
+  try_error = tryCatch(tolower(x), error = function(e) e)
+  if (!inherits(try_error, 'error'))
+    y = tolower(x)
+  return(y)
+}
+
+cleanCorpus<-function(corpus){
+  corpus <- tm_map(corpus, content_transformer(tryTolower))
+  corpus <- tm_map(corpus, removeWords, stopwords('SMART')) # FYI different than training
+  corpus <- tm_map(corpus, removePunctuation)
+  corpus <- tm_map(corpus, stripWhitespace)
+  corpus <- tm_map(corpus, removeNumbers)
+  return(corpus)
+}
+
+# Get text
+# ~/HarvardSummerAdmin2018/Lessons/July 30/Day9_Data/news.csv
+txt<-read.csv('C:/Users/Edward/Desktop/HarvardSummerAdmin2018/Lessons/July 30/Day9_Data/news.csv', stringsAsFactors = F, encoding = 'UTF-8')
+
+# Corpus Preprocessing & Organization
+txtCorpus <- VCorpus(DataframeSource(txt))
+txtCorpus<-cleanCorpus(txtCorpus)
+txtDTM<-DocumentTermMatrix(txtCorpus)
+
+# Make a simple matrix version
+txtM<-as.matrix(txtDTM)
+```
+
+
+Row 
+-----------------------------------------------------------------------
+### Report Date
+
+```{r}
+info <- Sys.Date()
+valueBox(info, icon = "fa-calendar")
+```
+
+### Some other info
+
+```{r}
+comments <- 'meh'
+valueBox(comments, icon = "fa-comments")
+```
+
+### Some other other info
+
+```{r}
+values <- 3
+valueBox(values, 
+         icon = "fa-trash",
+         color = ifelse(values > 10, "warning", "primary"))
+```
+
+Row
+-----------------------------------------------------------------------
+
+### WordCloud
+
+```{r wordcloud}
+dtmVec <- sort(colSums(txtM),decreasing=TRUE)
+wcDF <- data.frame(word = names(dtmVec),freq=dtmVec)
+wordcloud2(wcDF[1:200,], size = .5)
+```
+
+Row
+-----------------------------------------------------------------------
+### Top Word Associations
+
+```{r}
+dtmVec <- sort(colSums(txtM),decreasing=TRUE)
+wcDF <- data.frame(word = names(dtmVec),freq=dtmVec)
+topTerm<-as.character(wcDF[1,1])
+associations<-findAssocs(txtDTM, topTerm, 0.40)
+assocVec<-unlist(associations)
+names(assocVec)<-names(associations[[1]])
+barplot(assocVec, las=3)
+
+```
+
+Row
+-----------------------------------------------------------------------
+
+### Top Term Density
+```{r}
+## Top Term Density
+dtmVec <- sort(colSums(txtM),decreasing=TRUE)
+wcDF <- data.frame(word = names(dtmVec),freq=dtmVec)
+topTerms<-as.character(wcDF[1:8,1])
+topTerms<- paste(topTerms, collapse='|')
+txt$top_term_density<-stri_count_regex(txt$text, pattern=topTerms)
+topDensity<-aggregate(top_term_density ~ doc_id, txt, sum)
+topDensity<-topDensity[order(topDensity$top_term_density, decreasing=T),]
+topDensity<-subset(topDensity,topDensity$top_term_density>1) #reduce to 2+ mentions
+names(topDensity)<-c('NewsSource',topTerms)
+knitr::kable(topDensity)
+```
