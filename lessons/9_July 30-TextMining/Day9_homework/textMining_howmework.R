@@ -8,12 +8,12 @@
 #' Fill in the rest of the script, and answer the questions inline.  Then upload to canvas.
 
 # Set the working directory
-setwd("___________________________")
+setwd("~/HarvardSummerStudent2018/lessons/9_July 30-TextMining/Day9_homework")
 
 # Libs
-library(__) #tm package 
+library(tm) #tm package 
 library(qdap)
-library(____) # package for wordclouds
+library(wordcloud) # package for wordclouds
 library(RColorBrewer)
 
 # Options & Functions
@@ -49,10 +49,10 @@ cleanCorpus<-function(corpus){
 }
 
 # Get your data
-text <- read.csv(______________)
+text <- read.csv('sampledAirBnB_Boston.csv')
 
 # 1. How many comments are there BEFORE the sample?
-# Answer:
+# Answer: 4312
 
 # Get a sample of 1000 to speed up time
 set.seed(1234)
@@ -60,29 +60,29 @@ idx <- sample (1:nrow(text),1000)
 text <- text[idx, ]
 
 # Examine
-dim(____)
+dim(text)
 text$comments[1]
 
 # Define custom stopwords, add "apartment" and "boston" to the list
-customStopwords <- c(stopwords('english'), 'place', '_______', '__________')
+customStopwords <- c(stopwords('english'), 'place', 'apartment', 'boston')
 
 # Make the VECTOR of text called $comments into a volatile corpus 
 txtCorpus <- VCorpus(VectorSource(text$comments))
 
 # Apply the cleaning function to the volatile corpus; takes a moment!!
-txtCorpus<-_____________(txtCorpus)
+txtCorpus<-cleanCorpus(txtCorpus)
 
 # Make a Document Term Matrix 
-txtDTM <- _____________(txtCorpus)
+txtDTM <- DocumentTermMatrix(txtCorpus)
 
 # 2. How many terms are in this DTM?
-# Answer: 
+# Answer: 5690 //FIXME fix qdap
 
 # Convert TDM to a simple matrix; takes a moment
-txtDTMm <- _____________(txtDTM)
+txtDTMm <- as.matrix(txtDTM)
 
 # Get column Sums and sort decreasing =TRUE
-txtDTMv <- sort(______(txtDTMm),decreasing=TRUE)
+txtDTMv <- sort(colSums(txtDTMm),decreasing=TRUE)
 
 # Organize the row sums
 txtDF <- data.frame(word = names(txtDTMv),freq=txtDTMv)
@@ -91,24 +91,24 @@ txtDF <- data.frame(word = names(txtDTMv),freq=txtDTMv)
 head(txtDF)
 
 # 3. What is the third most frequent term used in the reviews?
-# Answer: 
+# Answer: clean
 
 # Choose the "Purples" color & drop light ones in the color palette
-pal <- brewer.pal(8, "_____")
+pal <- brewer.pal(8, "Purples")
 pal <- pal[-(1:2)]
 
 # Make a simple word cloud of all terms with 75 words with your palette object
 set.seed(1234)
-wordcloud(txtDF$word,txtDF$freq, max.words=__, random.order=FALSE, colors=___)
+wordcloud(txtDF$word,txtDF$freq, max.words=75, random.order=FALSE, colors=pal)
 
 # 4. Overall, are comments using positive or negative terms frequently?
-# Answer: 
+# Answer: positive
 
 # Now that you have examined the entire corpus, time to split it based on polarity(); this take a while!
-polarityScores <- ______(text$comments)
+polarityScores <- polarity(text$comments)
 
 # 5. What is the average polarity score for the comments?
-# Answer: 
+# Answer: 0.883
 
 # Using each document's polarity score segregate the comments into positive and negative corpora
 justScores <- polarityScores$all$polarity # extract just the polarity values
@@ -117,39 +117,40 @@ documentClass[is.na(documentClass)] <- 0 # clean up any NA values
 table(documentClass)
 
 # 6. What is the number of positive reviews versus negative reviews?
-# Answer: 
+# Answer: 70 negative, 930 positive
 
 # Now you can subset the original documents by their positive or negative nature and transpose them to TDM
+documentClass <- which(documentClass == 1)
 posReviews <- text$comments[documentClass]
 negReviews <- text$comments[-documentClass]
 
 # Collapse them into a single corpus for each class
-posReviews <- paste(posReviews, _________ = ' ')
-negReviews <- paste(negReviews, _________ = ' ')
+posReviews <- paste(posReviews, collapse = ' ')
+negReviews <- paste(negReviews, collapse = ' ')
 
 # Declare each as a volatile corpus from a vector source
-posReviews <- _______(VectorSource(posReviews))
-negReviews <- VCorpus(___________(negReviews))
+posReviews <- VCorpus(VectorSource(posReviews))
+negReviews <- VCorpus(VectorSource(negReviews))
 
 # Clean each of the corpora; takes awhile
-posReviews<-___________(posReviews)
-negReviews<-___________(negReviews)
+posReviews<-cleanCorpus(posReviews)
+negReviews<-cleanCorpus(negReviews)
 
 # Collapse the cleaned segregated corpora
-posReviews <- _____(posReviews, ________ = " ")
-negReviews <- _____(negReviews, ________ = " ")
+posReviews <- paste(posReviews, collapse = " ")
+negReviews <- paste(negReviews, collapse = " ")
 
 # Make a combined corpus of pos/neg
 allReviews <- c(posReviews, negReviews)
 
 # Now combine into a VCorpus, using a VectorSource
-allReviewsCorpus <- ________(__________(allReviews))
+allReviewsCorpus <- VCorpus(VectorSource(allReviews))
 
 # 7. How many documents are in this corpus?
-# Answer: 
+# Answer: 2
 
 # Make TDM and change to a simple matrix
-allReviewsTDM <- ____________(allReviewsCorpus)
+allReviewsTDM <- TermDocumentMatrix(allReviewsCorpus)
 allReviewsTDMm <- as.matrix(allReviewsTDM)
 
 # Label the new TDM, remember the order of subjects
@@ -157,14 +158,12 @@ colnames(allReviewsTDMm) = c("Positive", "Negative")
 
 # Make comparison cloud with 75 words, random.order = FALSE, and title.size = 0.5
 set.seed(1234)
-comparison.cloud(allReviewsTDMm, max.words=__, random.order=_____,
-                 title.size=___,colors=brewer.pal(ncol(allReviewsTDMm),"Dark2"))
+comparison.cloud(allReviewsTDMm, max.words=75, random.order=FALSE,
+                 title.size=0.5,colors=brewer.pal(ncol(allReviewsTDMm),"Dark2"))
 
 # 8. Based on this visual (remember its only a sample so may not be accurate).  
 # What are the 4 most frequent terms used in positive reviews?  Does this indicate a host matters?
-# Answer: 
+# Answer: "great", "clean", "stay", "nice".
+#         "host" appears as a very small word on the right, so it doesn't seem to matter
 
 # End
-
-
-
