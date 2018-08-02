@@ -29,8 +29,8 @@ tryTolower <- function(x){
 
 cleanCorpus<-function(corpus){
   corpus <- tm_map(corpus, content_transformer(qdapRegex::rm_url))
-  corpus <- tm_map(corpus, content_transformer(replace_contraction)) #new: isn't to is not
-  corpus <- tm_map(corpus, content_transformer(replace_symbol)) #new: @ to "at"
+  # corpus <- tm_map(corpus, content_transformer(replace_contraction)) #new: isn't to is not
+  # corpus <- tm_map(corpus, content_transformer(replace_symbol)) #new: @ to "at"
   corpus <- tm_map(corpus, removePunctuation)
   corpus <- tm_map(corpus, stripWhitespace)
   corpus <- tm_map(corpus, removeNumbers)
